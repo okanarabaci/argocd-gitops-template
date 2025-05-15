@@ -1,0 +1,47 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: prod
+spec:
+  generators:
+    - matrix:
+        generators:
+          - list:
+              elements:
+                - namespace: prod
+                  path: envs/overlays/prod
+                  cluster: https://kubernetes.default.svc
+                  argoproject: template-project-prod
+                  environment: prod
+          - list:
+              elements:
+                - name: configmaps
+                  apppath: configmaps
+                - name: secrets
+                  apppath: secrets
+                - name: cronjobs
+                  apppath: cronjobs
+                - name: hpa
+                  apppath: hpa
+                - name: routes
+                  apppath: routes
+                - name: hello-world-application
+                  apppath: apps/hello-world-application
+  template:
+    metadata:
+      name: '{{name}}-{{environment}}'
+    spec:
+      project: '{{argoproject}}'
+      source:
+        repoURL: https://github.com/okanarabaci/argocd-gitops-template
+        targetRevision: main
+        path: '{{path}}/{{apppath}}'
+      destination:
+        server: '{{cluster}}'
+        namespace: '{{namespace}}'
+      syncPolicy:
+        syncOptions:
+          - PrunePropagationPolicy=background
+        automated:
+          selfHeal: true
+          prune: true

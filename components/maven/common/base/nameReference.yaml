@@ -1,0 +1,9 @@
+nameReference:
+  - kind: Deployment
+    fieldSpecs:
+      - kind: Deployment
+        path: spec/selector/matchLabels/app
+      - kind: Deployment
+        path: spec/template/metadata/labels/app
+      - kind: Deployment
+        path: spec/template/spec/containers/name

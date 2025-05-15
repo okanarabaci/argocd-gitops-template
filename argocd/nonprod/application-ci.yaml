@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ci
+  annotations:
+    argocd.argoproj.io/sync-wave: "200"
+spec:
+  project: template-project
+  source:
+    repoURL: https://github.com/okanarabaci/argocd-gitops-template
+    targetRevision: main
+    path: clusters/overlays/nonprod/ci
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ci-pipelines
+  syncPolicy:
+    automated:
+      selfHeal: true

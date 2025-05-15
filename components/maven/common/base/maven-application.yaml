@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: maven
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: maven
+  template:
+    metadata:
+      labels:
+        app: maven
+    spec:
+      volumes:
+        - name: jar-storage
+          emptyDir: {}
+      initContainers:
+        - name: jar-downloader
+          image: registry.redhat.io/ubi8-minimal
+          command: ["/bin/sh", "-c"]
+          args:
+            - echo "Downloading JAR from $JAR_URL" &&
+              curl -v -L -u "$JAR_AUTH_USERNAME":"$JAR_AUTH_PASSWORD" -o /deployments/app.jar "$JAR_URL"
+          env:
+            - name: JAR_AUTH_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: USERNAME
+                  name: jarauth-credentials
+            - name: JAR_AUTH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: PASSWORD
+                  name: jarauth-credentials
+            - name: JAR_URL
+              value: ""
+          volumeMounts:
+            - name: jar-storage
+              mountPath: "/deployments"
+      containers:
+        - name: maven
+          image: registry.access.redhat.com/ubi9/openjdk-17
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: 150m
+              memory: 600Mi
+            requests:
+              cpu: 100m
+              memory: 200Mi
+          volumeMounts:
+            - name: jar-storage
+              mountPath: "/deployments"

@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ace-gradle-build-task.yaml
+- create-source-pvc-task.yaml
+- delete-source-pvc-task.yaml
+# - git-cli.yaml
+# - git-clone.yaml
+- github-set-status-pr-task.yml
+- github-set-status-task.yaml
+- maven-build-application.yaml
+- s2i-ace-gradle-overlay-task.yaml
+- s2i-ace-gradle-overlay-build-only-task.yaml
+- s2i-java-build-and-deploy-task.yaml
+- s2i-liberty-task.yaml
+- set-bar-url-task.yaml
+- set-jar-url.yaml
+- s2i-maven-build-task.yaml
+- kustomize-set-image-task.yaml
+- delete-pvc-finalizers-task.yaml
+- https://api.hub.tekton.dev/v1/resource/tekton/task/github-open-pr/0.2/raw
+- yq-create-kafka-override-task.yaml
+- yq-create-kafka-override-bar-url-task.yaml
