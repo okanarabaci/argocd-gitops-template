@@ -10,7 +10,6 @@ The repository is structured with five root folders:
 - `argocd`: ApplicationSets and Applications for nonprod and prod that will in turn load the rest of the components that should be in each cluster.
 - `clusters`: Cluster-specific resources.
 - `components`: Provides yaml for all required apps, pipelines, and gitops tools. For applications, this is where the base yaml is defined.
-- `docs`: Documentation related to the GitOps repository, pipelines, ways-of-working etc.
 - `envs`: Environment-specific resources. This folder contains the apps, configurations, namespaces, and other resources that are specific to an environment. Inherits resources from the components folder.
 
 This folder structure is heavily dependent on [kustomize](https://kustomize.io/).
